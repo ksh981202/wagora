@@ -1,0 +1,21 @@
+-- V1 CSV 22컬럼 상세 필드 (nail_designs)
+alter table public.nail_designs add column if not exists description text not null default '';
+alter table public.nail_designs add column if not exists description_en text not null default '';
+alter table public.nail_designs add column if not exists color text not null default '';
+alter table public.nail_designs add column if not exists color_en text not null default '';
+alter table public.nail_designs add column if not exists nail_length text not null default '';
+alter table public.nail_designs add column if not exists length_en text not null default '';
+alter table public.nail_designs add column if not exists hand_type text not null default '';
+alter table public.nail_designs add column if not exists hand_type_en text not null default '';
+alter table public.nail_designs add column if not exists mood text not null default '';
+alter table public.nail_designs add column if not exists mood_en text not null default '';
+alter table public.nail_designs add column if not exists situations text not null default '';
+alter table public.nail_designs add column if not exists occasion_en text not null default '';
+alter table public.nail_designs add column if not exists styles text not null default '';
+alter table public.nail_designs add column if not exists styles_en text not null default '';
+alter table public.nail_designs add column if not exists design_technique text not null default '';
+alter table public.nail_designs add column if not exists technique_en text not null default '';
+alter table public.nail_designs add column if not exists design_elements text not null default '';
+alter table public.nail_designs add column if not exists design_point_en text not null default '';
+alter table public.nail_designs add column if not exists procedure_guide text not null default '';
+alter table public.nail_designs add column if not exists guide_en text not null default '';

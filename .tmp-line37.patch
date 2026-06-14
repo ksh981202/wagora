@@ -1,0 +1,162 @@
+*** Begin Patch
+*** Update File: c:/Users/vlvlz/OneDrive/바탕 화면/프로그램 개발/깃허브 다운파일/nailbook-studio-main/src/pages/TestResultPage.tsx
+@@
+-import { InfiniteGridSentinel } from "@/components/InfiniteGridSentinel";
+-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+ import { useEffect } from "react";
+ import { ChevronLeft, Share2 } from "lucide-react";
+ import { useNavigate } from "react-router-dom";
+-
+-const recommendedNails = [
+-  {
+-    title: "복숭아 시럽 퐁당, 골드 마블",
+-    likes: "❤️ 3.9k",
+-    image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=1200&q=80",
+-  },
+-  {
+-    title: "고급스러운 리얼 대리석",
+-    likes: "❤️ 2.6k",
+-    image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&q=80",
+-  },
+-  {
+-    title: "은은한 누드 글로시 프렌치",
+-    likes: "❤️ 4.1k",
+-    image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=1200&q=80",
+-  },
+-  {
+-    title: "시크한 블랙 라인 포인트",
+-    likes: "❤️ 1.8k",
+-    image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=1200&q=80",
+-  },
+-];
+-
+-const horizontalStylePicks = [
+-  {
+-    title: "여리여리 시럽 핑크",
+-    likes: "❤️ 1.2k",
+-    image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=900&q=85",
+-  },
+-  {
+-    title: "화려한 스톤 아트",
+-    likes: "❤️ 3.4k",
+-    image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=900&q=85",
+-  },
+-  {
+-    title: "미니멀 골드 라인",
+-    likes: "❤️ 892",
+-    image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=900&q=85",
+-  },
+-  {
+-    title: "누드 글로시 프렌치",
+-    likes: "❤️ 2.1k",
+-    image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=900&q=85",
+-  },
+-  {
+-    title: "오로라 글리터",
+-    likes: "❤️ 1.7k",
+-    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&q=85",
+-  },
+-] as const;
++import { calculateNailResult } from "@/lib/nailDiagnosis";
+@@
+   const TestResultPage = () => {
+   const navigate = useNavigate();
+-
+-  const { visibleItems, sentinelRef, hasMore } = useInfiniteScroll(recommendedNails, "test-result-grid");
++  const result = calculateNailResult({
++    lengthId: sessionStorage.getItem("diagnosis.lengthId") ?? undefined,
++    handTypeId: sessionStorage.getItem("diagnosis.handTypeId") ?? undefined,
++    moodId: sessionStorage.getItem("diagnosis.moodId") ?? undefined,
++    colorId: sessionStorage.getItem("diagnosis.colorId") ?? undefined,
++  });
+@@
+-    <div className="relative mx-auto flex min-h-screen max-w-md flex-col bg-gray-50 pb-24">
++    <div className="relative mx-auto flex min-h-screen max-w-md flex-col bg-[#FCFAF7] pb-24">
+@@
+-      <main className="flex-1 px-4 pb-4">
++      <main className="flex-1 px-4 pb-8">
+         <h2 className="mt-8 text-center text-[22px] font-semibold leading-snug text-gray-900 sm:text-[24px]">
+-          당신에게 어울리는 네일
++          {result.title}
+         </h2>
+         <div className="mt-3 flex justify-center">
+-          <span className="inline-flex items-center justify-center rounded-full bg-orange-50 px-4 py-1.5 text-[13px] font-bold text-orange-500 sm:text-[14px]">
+-            ✨ Elevated & Elegant Style
++          <span className="inline-flex items-center justify-center rounded-full bg-[#FFEFE9] px-4 py-1.5 text-[13px] font-bold text-[#FF826E] sm:text-[14px]">
++            {result.styleTag}
+           </span>
+         </div>
+ 
+-        <div className="mb-8 mt-6 rounded-2xl border border-orange-100 bg-orange-50/50 p-5">
+-          <p className="mb-2 text-[15px] font-bold text-orange-600">✨ 추천 이유</p>
++        <div className="mb-8 mt-6 rounded-2xl border border-[#FFE4DB] bg-[#FFF7F3] p-5">
++          <p className="mb-2 text-[15px] font-bold text-[#FF826E]">💡 추천 이유</p>
+           <p className="break-keep text-[14px] font-medium leading-relaxed text-gray-700">
+-            고객님의 손 타입을 보완하면서도 선택하신 무드와 컬러에 완벽하게 어울리는 맞춤형 디자인입니다. 세로 라인 디테일이
+-            손을 더욱 슬림하고 우아하게 돋보이게 합니다.
++            {result.description}
+           </p>
+         </div>
+ 
+-        <div className="grid grid-cols-2 gap-3">
+-          {visibleItems.map((item) => (
+-            <button
+-              key={item.title}
+-              type="button"
+-              className="flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm"
+-              onClick={() => navigate("/")}
+-            >
+-              <div className="aspect-square w-full overflow-hidden">
+-                <img src={item.image} alt="" className="h-full w-full object-cover" />
++        <div className="grid grid-cols-2 gap-4">
++          {result.mainDesigns.map((item) => (
++            <div key={item.title} className="flex w-full flex-col">
++              <div className="aspect-square w-full overflow-hidden rounded-2xl bg-white shadow-sm">
++                <img src={item.src} alt={item.title} className="h-full w-full object-cover" />
+               </div>
+-              <div className="flex w-full flex-col items-center justify-center px-3 pb-3 pt-2">
+-                <div className="mt-1 w-full break-keep px-1 text-center text-[14px] font-medium text-gray-900 line-clamp-2 sm:text-[15px]">
+-                  {item.title}
+-                </div>
+-              </div>
+-            </button>
++              <p className="mt-2 text-center text-[14px] font-medium text-gray-800 sm:text-[15px]">{item.title}</p>
++            </div>
+           ))}
+-          <InfiniteGridSentinel sentinelRef={sentinelRef} hasMore={hasMore} className="col-span-2 h-6 w-full" />
+         </div>
+ 
+         <section className="mt-12" aria-labelledby="more-styles-heading">
+@@
+-          <div className="hide-scrollbar -mx-5 flex gap-4 overflow-x-auto px-5 pb-4">
+-            {horizontalStylePicks.map((item) => (
+-              <button
+-                key={item.title}
+-                type="button"
+-                onClick={() => navigate("/")}
+-                className="flex w-[140px] shrink-0 flex-col gap-2"
+-              >
++          <div className="grid grid-cols-3 gap-3">
++            {result.subDesigns.map((item) => (
++              <div key={item.title} className="flex flex-col gap-2">
+                 <img
+-                  src={item.image}
++                  src={item.src}
+                   alt={item.title}
+                   className="aspect-square w-full rounded-2xl border border-gray-100 object-cover"
+                   loading="lazy"
+                 />
+-                <div className="flex w-full min-w-0 flex-col items-center justify-center">
+-                  <p className="mt-2 w-full text-center break-keep font-medium text-[13px] text-gray-800 sm:text-[14px]">
+-                    {item.title}
+-                  </p>
+-                </div>
+-              </button>
++                <p className="text-center break-keep text-[12px] font-medium text-gray-800 sm:text-[13px]">
++                  {item.title}
++                </p>
++              </div>
+             ))}
+           </div>
+         </section>
+*** End Patch

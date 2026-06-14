@@ -1,0 +1,84 @@
+*** Begin Patch
+*** Update File: c:/Users/vlvlz/OneDrive/바탕 화면/프로그램 개발/깃허브 다운파일/nailbook-studio-main/src/pages/TestStep1Page.tsx
+@@
+ import { useState } from "react";
+ import { ChevronLeft } from "lucide-react";
+ import { useNavigate } from "react-router-dom";
+-
+-const nailLengthOptions = [
+-  {
+-    label: "짧은 손톱",
+-    image: "/diagnosis/length-short.jpg",
+-  },
+-  {
+-    label: "중간 길이",
+-    image: "/diagnosis/length-medium.jpg",
+-  },
+-  {
+-    label: "긴 손톱",
+-    image: "/diagnosis/length-long.jpg",
+-  },
+-];
+-
+-const handTypeOptions = [
+-  "🌷 손가락이 짧은 편",
+-  "🦢 손가락이 긴 편",
+-  "☁️ 손이 통통한 편",
+-  "🩰 손이 마른 편",
+-];
++import { handTypeOptions, nailLengthOptions } from "@/lib/nailDiagnosis";
+@@
+   const navigate = useNavigate();
+-  const [selectedLength, setSelectedLength] = useState("");
+-  const [selectedType, setSelectedType] = useState("");
++  const [selectedLength, setSelectedLength] = useState("");
++  const [selectedType, setSelectedType] = useState("");
+@@
+           {nailLengthOptions.map((opt) => (
+             <button
+-              key={opt.label}
++              key={opt.id}
+               type="button"
+-              onClick={() => setSelectedLength(opt.label)}
++              onClick={() => setSelectedLength(opt.id)}
+               className={`overflow-hidden rounded-2xl border-2 transition-all ${
+-                selectedLength === opt.label ? "border-primary ring-2 ring-primary/20" : "border-transparent"
++                selectedLength === opt.id ? "border-primary ring-2 ring-primary/20" : "border-transparent"
+               }`}
+             >
+               <img src={opt.image} alt="" className="aspect-square w-full object-cover" />
+               <span className="mt-2 block bg-white py-2 text-center font-sans text-[13px] font-medium tracking-tight text-gray-800 sm:text-[14px]">
+@@
+         <div className="flex flex-col gap-3">
+           {handTypeOptions.map((t) => (
+             <button
+-              key={t}
++              key={t.id}
+               type="button"
+-              onClick={() => setSelectedType(t)}
++              onClick={() => setSelectedType(t.id)}
+               className={`w-full rounded-xl border px-5 py-4 text-left font-sans text-[15px] font-medium tracking-tight transition-colors sm:text-[16px] ${
+-                selectedType === t
++                selectedType === t.id
+                   ? "border-primary bg-primary/5 text-primary"
+                   : "border-gray-200 text-gray-700"
+               }`}
+             >
+-              {t}
++              {t.label}
+             </button>
+           ))}
+         </div>
+@@
+         <button
+           type="button"
+           disabled={!canNext}
+-          onClick={() => navigate("/test-step2")}
++          onClick={() => {
++            sessionStorage.setItem("diagnosis.lengthId", selectedLength);
++            sessionStorage.setItem("diagnosis.handTypeId", selectedType);
++            navigate("/test-step2");
++          }}
+           className="w-full rounded-xl bg-primary py-3.5 font-sans text-[16px] font-bold tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
+         >
+*** End Patch

@@ -1,0 +1,92 @@
+*** Begin Patch
+*** Update File: c:/Users/vlvlz/OneDrive/바탕 화면/프로그램 개발/깃허브 다운파일/nailbook-studio-main/src/pages/TestStep2Page.tsx
+@@
+ import { useState } from "react";
+ import { ChevronLeft, Check } from "lucide-react";
+ import { useNavigate } from "react-router-dom";
+-
+-/** 무드 선택 — 썸네일은 네일/손 사진만 사용 */
+-const styleOptions = [
+-  {
+-    label: "심플·깔끔",
+-    image: "/diagnosis/mood-simple.jpg",
+-  },
+-  {
+-    label: "여리여리·청순",
+-    image: "/diagnosis/mood-delicate.jpg",
+-  },
+-  {
+-    label: "귀엽고 사랑스러운",
+-    image: "/diagnosis/mood-cute.jpg",
+-  },
+-  {
+-    label: "우아·고급스러운",
+-    image: "/diagnosis/mood-elegant.jpg",
+-  },
+-  {
+-    label: "화려한·블링블링",
+-    image: "/diagnosis/mood-glamorous.jpg",
+-  },
+-  {
+-    label: "유니크·힙한",
+-    image: "/diagnosis/mood-unique.jpg",
+-  },
+-] as const;
++import { styleOptions } from "@/lib/nailDiagnosis";
+@@
+-const MOOD_CURATOR_TIPS: Record<(typeof styleOptions)[number]["label"], string> = {
+-  "심플·깔끔":
++const MOOD_CURATOR_TIPS: Record<(typeof styleOptions)[number]["id"], string> = {
++  simple:
+     "깔끔한 셔츠나 슬랙스를 즐겨 입는다면, 군더더기 없는 심플 네일이 단정하고 세련된 인상을 완성해 줄 거예요.",
+-  "여리여리·청순":
++  delicate:
+     "파스텔톤 블라우스나 원피스를 좋아하시나요? 은은하게 비치는 시럽 네일이 맑고 청순한 분위기를 극대화해 줍니다.",
+-  "귀엽고 사랑스러운":
++  cute:
+     "아기자기한 소품이나 캐주얼 룩을 즐긴다면, 귀여운 포인트가 들어간 네일로 일상에 기분 좋은 활력을 더해보세요.",
+-  "우아·고급스러운":
++  elegant:
+     "트위드 자켓이나 격식 있는 자리를 자주 간다면, 진주나 은은한 펄이 더해진 우아한 네일이 완벽한 매치입니다.",
+-  "화려한·블링블링":
++  glamorous:
+     "포인트 액세서리나 시선을 사로잡는 룩을 즐긴다면, 빛나는 스톤과 파츠가 완벽한 주인공으로 만들어 줄 거예요.",
+-  "유니크·힙한":
++  unique:
+     "트렌디한 스트릿 룩이나 나만의 개성을 중시한다면, 메탈이나 감각적인 드로잉이 들어간 힙한 네일로 개성을 뽐내보세요.",
+ };
+@@
+   const curatorTipBody =
+     selectedStyle && selectedStyle in MOOD_CURATOR_TIPS
+       ? MOOD_CURATOR_TIPS[selectedStyle as keyof typeof MOOD_CURATOR_TIPS]
+@@
+           {styleOptions.map((s) => (
+             <button
+-              key={s.label}
++              key={s.id}
+               type="button"
+-              onClick={() => setSelectedStyle(s.label)}
++              onClick={() => setSelectedStyle(s.id)}
+               className={`relative aspect-square overflow-hidden rounded-2xl text-left ${
+-                selectedStyle === s.label ? "ring-2 ring-primary ring-offset-2" : ""
++                selectedStyle === s.id ? "ring-2 ring-primary ring-offset-2" : ""
+               }`}
+             >
+@@
+-              {selectedStyle === s.label && (
++              {selectedStyle === s.id && (
+                 <span className="absolute top-2 right-2 bg-primary text-white rounded-full p-1">
+                   <Check className="w-4 h-4" />
+                 </span>
+@@
+         <button
+           type="button"
+           disabled={!selectedStyle}
+-          onClick={() => navigate("/test-step3")}
++          onClick={() => {
++            sessionStorage.setItem("diagnosis.moodId", selectedStyle);
++            navigate("/test-step3");
++          }}
+           className="w-full py-3.5 rounded-xl font-bold text-white bg-primary disabled:opacity-40"
+         >
+*** End Patch

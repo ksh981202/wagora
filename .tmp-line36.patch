@@ -1,0 +1,64 @@
+*** Begin Patch
+*** Update File: c:/Users/vlvlz/OneDrive/바탕 화면/프로그램 개발/깃허브 다운파일/nailbook-studio-main/src/pages/TestStep3Page.tsx
+@@
+ import { useState } from "react";
+ import { ChevronLeft } from "lucide-react";
+ import { useNavigate } from "react-router-dom";
+-
+-const colorOptions = [
+-  {
+-    id: "pink",
+-    title: "핑크",
+-    src: "/diagnosis/color-pink.png",
+-    tone: "🎀 쿨톤 추천",
+-    tags: "#여리여리 #러블리",
+-  },
+-  {
+-    id: "nude",
+-    title: "누드/베이지",
+-    src: "/diagnosis/color-nude.png",
+-    tone: "☀️ 웜톤 추천",
+-    tags: "#차분함 #오피스",
+-  },
+-  {
+-    id: "red",
+-    title: "레드 / 버건디",
+-    src: "/diagnosis/color-red.png",
+-    tone: "🍎 매혹적인 포인트",
+-    tags: "#강렬함 #섹시 #포인트",
+-  },
+-  {
+-    id: "black",
+-    title: "블랙 / 다크",
+-    src: "/diagnosis/color-black.png",
+-    tone: "🕶️ 시크한 매력",
+-    tags: "#시크 #도도 #걸크러쉬",
+-  },
+-  {
+-    id: "pastel",
+-    title: "파스텔",
+-    src: "/diagnosis/color-pastel.png",
+-    tone: "🎀 쿨톤 추천",
+-    tags: "#몽환적 #유니크",
+-  },
+-  {
+-    id: "glitter",
+-    title: "글리터",
+-    src: "/diagnosis/color-glitter.png",
+-    tone: "💎 화려함 끝판왕",
+-    tags: "#영롱 #반짝반짝 #시선집중",
+-  },
+-] as const;
++import { colorOptions } from "@/lib/nailDiagnosis";
+@@
+         <button
+           type="button"
+           disabled={!selectedColor}
+-          onClick={() => navigate("/test-result")}
++          onClick={() => {
++            sessionStorage.setItem("diagnosis.colorId", selectedColor);
++            navigate("/test-result");
++          }}
+           className="w-full rounded-xl bg-primary py-3.5 font-sans font-bold tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-40"
+         >
+*** End Patch
