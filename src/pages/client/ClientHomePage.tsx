@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { localizePath } from "@/shared/language/localizedRouting";
 
 type HomeNailCard = { id: string; title: string; titleEn: string; image: string };
 
@@ -114,6 +115,7 @@ export default function ClientHomePage() {
   } = useGalleryInfiniteQuery(DEFAULT_GALLERY_TAB, DEFAULT_GALLERY_SORT);
   const { language } = useLanguageContext();
   const isEnglish = language === "en";
+  const toLocalizedPath = (path: string) => localizePath(path, language);
 
   const recommendNails = useMemo(
     () => (feed?.recommend ?? []).map(toHomeNailCard),
@@ -181,7 +183,7 @@ export default function ClientHomePage() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const openDetail = (item: NailDesignRow) => {
-    navigate(`/detail/${item.id}`, {
+    navigate(toLocalizedPath(`/detail/${item.id}`), {
       state: {
         initialNailData: {
           id: item.id,
@@ -200,7 +202,7 @@ export default function ClientHomePage() {
         <SectionHeading
           title={isEnglish ? "Recommended Lookbook" : "추천 룩북"}
           actionLabel={isEnglish ? "See All >" : "전체보기 >"}
-          onAction={() => navigate("/magazine")}
+          onAction={() => navigate(toLocalizedPath("/magazine"))}
         />
         <div
           ref={scrollRef}
@@ -225,7 +227,7 @@ export default function ClientHomePage() {
               key={nail.id}
               className="relative w-full flex-none snap-center cursor-pointer"
               onClick={() => {
-                if (nail.id !== FALLBACK_LOOKBOOK_CARD.id) navigate(`/detail/${nail.id}`);
+                if (nail.id !== FALLBACK_LOOKBOOK_CARD.id) navigate(toLocalizedPath(`/detail/${nail.id}`));
               }}
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[30px] border border-black/10 bg-stone-200 shadow-[0_24px_60px_rgba(37,28,20,0.18)]">
@@ -267,7 +269,7 @@ export default function ClientHomePage() {
             <p className="mt-1.5 text-[13px] text-stone-500">{isEnglish ? "Discover a tailored pet look with a quick test" : "간단한 테스트로 체형과 무드에 맞는 룩 찾기"}</p>
             <button
               type="button"
-              onClick={() => navigate('/test-intro')}
+              onClick={() => navigate(toLocalizedPath('/test-intro'))}
               className="mt-5 flex items-center justify-center rounded-full bg-[#17130f] px-4 py-2 text-[13px] font-bold text-white transition-transform active:scale-95"
             >
               {isEnglish ? "Start Finder" : "핏 찾기 시작"} <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -287,9 +289,13 @@ export default function ClientHomePage() {
           className="px-5"
           title={isEnglish ? "Theme Style" : "테마 스타일"}
           actionLabel={isEnglish ? "See All >" : "전체보기 >"}
-          onAction={() => navigate("/category")}
+          onAction={() => navigate(toLocalizedPath("/category"))}
         />
-        <HorizontalCategoryRail items={THEME_STYLES} isEnglish={isEnglish} onNavigate={navigate} />
+        <HorizontalCategoryRail
+          items={THEME_STYLES}
+          isEnglish={isEnglish}
+          onNavigate={(to) => navigate(toLocalizedPath(to))}
+        />
       </section>
 
       <section className="mb-16">
@@ -297,16 +303,20 @@ export default function ClientHomePage() {
           className="px-5"
           title={isEnglish ? "Season Essentials" : "시즌 에센셜"}
           actionLabel={isEnglish ? "See All >" : "전체보기 >"}
-          onAction={() => navigate("/season-curation")}
+          onAction={() => navigate(toLocalizedPath("/season-curation"))}
         />
-        <HorizontalCategoryRail items={SEASON_ESSENTIALS} isEnglish={isEnglish} onNavigate={navigate} />
+        <HorizontalCategoryRail
+          items={SEASON_ESSENTIALS}
+          isEnglish={isEnglish}
+          onNavigate={(to) => navigate(toLocalizedPath(to))}
+        />
       </section>
 
       <section className="mb-16 px-5">
         <SectionHeading
           title={isEnglish ? "Discover" : "디스커버"}
           actionLabel={isEnglish ? "See All >" : "전체보기 >"}
-          onAction={() => navigate("/gallery")}
+          onAction={() => navigate(toLocalizedPath("/gallery"))}
         />
         <div className="grid grid-cols-2 gap-4">
           {isDiscoverLoading ? (
@@ -386,11 +396,11 @@ export default function ClientHomePage() {
           )}
         </div>
         <div className="mb-4 flex items-center gap-3 text-[13px] text-gray-500">
-          <Link to="/terms" className="font-semibold text-gray-500 hover:underline">
+          <Link to={toLocalizedPath("/terms")} className="font-semibold text-gray-500 hover:underline">
             {isEnglish ? "Terms of Service" : "이용약관"}
           </Link>
           <span className="text-gray-300">|</span>
-          <Link to="/privacy" className="font-bold text-gray-800 hover:underline">
+          <Link to={toLocalizedPath("/privacy")} className="font-bold text-gray-800 hover:underline">
             {isEnglish ? "Privacy Policy" : "개인정보처리방침"}
           </Link>
         </div>

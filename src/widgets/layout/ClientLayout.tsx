@@ -10,6 +10,7 @@ import {
 import { LanguageProvider, useLanguageContext } from '@/contexts/LanguageContext'
 import LanguageToggle from '@/components/LanguageToggle'
 import { supabase } from '@/shared/api/supabaseClient'
+import { localizePath, stripLanguagePrefix } from '@/shared/language/localizedRouting'
 
 const bottomNavLinkClass = ({ isActive }: { isActive: boolean }) =>
   [
@@ -38,6 +39,8 @@ function ClientLayoutContent() {
   const { pathname } = useLocation()
   const navigationType = useNavigationType()
   const [isAdminUser, setIsAdminUser] = useState(false)
+  const routePathname = stripLanguagePrefix(pathname)
+  const toLocalizedPath = (path: string) => localizePath(path, language)
 
   useEffect(() => {
     if (navigationType === 'POP') return
@@ -68,62 +71,62 @@ function ClientLayoutContent() {
   }, [])
 
   const hideTopHeader =
-    pathname.startsWith('/test') ||
-    pathname.includes('/detail/') ||
-    pathname === '/category' ||
-    pathname === '/search' ||
-    pathname.startsWith('/gallery') ||
-    pathname === '/my' ||
-    pathname.startsWith('/my/list') ||
-    pathname === '/notifications' ||
-    pathname === '/notification-list' ||
-    pathname === '/support' ||
-    pathname === '/faq' ||
-    pathname === '/terms' ||
-    pathname === '/privacy' ||
-    pathname === '/notice' ||
-    pathname === '/account' ||
-    pathname === '/recommend' ||
-    pathname === '/color-curation' ||
-    pathname === '/color-list' ||
-    pathname === '/color-theme-list' ||
-    pathname === '/color-popular-list' ||
-    pathname === '/theme' ||
-    pathname === '/season-curation' ||
-    pathname === '/season-list' ||
-    pathname === '/vacation-list' ||
-    pathname === '/season-popular-list' ||
-    pathname === '/style-curation' ||
-    pathname === '/style-list' ||
-    pathname === '/style-best-list' ||
-    pathname === '/style-gallery-list' ||
-    pathname === '/theme-list' ||
-    pathname === '/situation-list' ||
-    pathname === '/today-special' ||
-    pathname === '/popular-design' ||
-    pathname === '/period-best-list' ||
-    pathname === '/reaction-best-list' ||
-    pathname === '/shape-best-list' ||
-    pathname === '/search-trend-list' ||
-    pathname === '/trend' ||
-    pathname === '/magazine' ||
-    pathname.startsWith('/magazine/') ||
-    pathname === '/texture' ||
-    pathname === '/texture-list' ||
-    pathname === '/syrup-best' ||
-    pathname === '/parts' ||
-    pathname === '/parts-list' ||
-    pathname === '/stone-best-list' ||
-    pathname === '/marble-best-list' ||
-    pathname === '/popular-art-list' ||
-    pathname === '/chic-best-list' ||
-    pathname === '/full-parts-list' ||
-    pathname === '/art' ||
-    pathname === '/pattern' ||
-    pathname === '/pattern-list' ||
-    pathname === '/mood-list' ||
-    pathname === '/popular-mood-list' ||
-    pathname === '/mood'
+    routePathname.startsWith('/test') ||
+    routePathname.includes('/detail/') ||
+    routePathname === '/category' ||
+    routePathname === '/search' ||
+    routePathname.startsWith('/gallery') ||
+    routePathname === '/my' ||
+    routePathname.startsWith('/my/list') ||
+    routePathname === '/notifications' ||
+    routePathname === '/notification-list' ||
+    routePathname === '/support' ||
+    routePathname === '/faq' ||
+    routePathname === '/terms' ||
+    routePathname === '/privacy' ||
+    routePathname === '/notice' ||
+    routePathname === '/account' ||
+    routePathname === '/recommend' ||
+    routePathname === '/color-curation' ||
+    routePathname === '/color-list' ||
+    routePathname === '/color-theme-list' ||
+    routePathname === '/color-popular-list' ||
+    routePathname === '/theme' ||
+    routePathname === '/season-curation' ||
+    routePathname === '/season-list' ||
+    routePathname === '/vacation-list' ||
+    routePathname === '/season-popular-list' ||
+    routePathname === '/style-curation' ||
+    routePathname === '/style-list' ||
+    routePathname === '/style-best-list' ||
+    routePathname === '/style-gallery-list' ||
+    routePathname === '/theme-list' ||
+    routePathname === '/situation-list' ||
+    routePathname === '/today-special' ||
+    routePathname === '/popular-design' ||
+    routePathname === '/period-best-list' ||
+    routePathname === '/reaction-best-list' ||
+    routePathname === '/shape-best-list' ||
+    routePathname === '/search-trend-list' ||
+    routePathname === '/trend' ||
+    routePathname === '/magazine' ||
+    routePathname.startsWith('/magazine/') ||
+    routePathname === '/texture' ||
+    routePathname === '/texture-list' ||
+    routePathname === '/syrup-best' ||
+    routePathname === '/parts' ||
+    routePathname === '/parts-list' ||
+    routePathname === '/stone-best-list' ||
+    routePathname === '/marble-best-list' ||
+    routePathname === '/popular-art-list' ||
+    routePathname === '/chic-best-list' ||
+    routePathname === '/full-parts-list' ||
+    routePathname === '/art' ||
+    routePathname === '/pattern' ||
+    routePathname === '/pattern-list' ||
+    routePathname === '/mood-list' ||
+    routePathname === '/popular-mood-list' ||
+    routePathname === '/mood'
 
   const hideBottomNav = false
 
@@ -139,7 +142,7 @@ function ClientLayoutContent() {
           <h1
             className="shrink-0 cursor-pointer whitespace-nowrap font-serif text-[27px] font-semibold tracking-[0.18em] text-gray-950 sm:text-[29px]"
             style={{ fontFamily: "'Playfair Display', 'Times New Roman', serif" }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate(toLocalizedPath('/'))}
           >
             WAGORA
           </h1>
@@ -148,7 +151,7 @@ function ClientLayoutContent() {
             <button
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary sm:h-10 sm:w-10"
-              onClick={() => navigate('/search')}
+              onClick={() => navigate(toLocalizedPath('/search'))}
               aria-label="검색"
             >
               <Search size={18} className="text-foreground" />
@@ -166,7 +169,7 @@ function ClientLayoutContent() {
             <button
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary sm:h-10 sm:w-10"
-              onClick={() => navigate('/my')}
+              onClick={() => navigate(toLocalizedPath('/my'))}
               aria-label="마이페이지"
             >
               <User size={18} className="text-foreground" />
@@ -185,7 +188,7 @@ function ClientLayoutContent() {
           aria-label="하단 탭"
         >
           <NavLink
-            to="/"
+            to={toLocalizedPath('/')}
             end
             className={bottomNavLinkClass}
             aria-label={isEnglish ? 'Home tab' : '홈 탭'}
@@ -198,7 +201,7 @@ function ClientLayoutContent() {
             <span className="text-[9px] font-medium leading-none sm:text-[10px]">{isEnglish ? 'Home' : '홈'}</span>
           </NavLink>
           <NavLink
-            to="/gallery"
+            to={toLocalizedPath('/gallery')}
             className={bottomNavLinkClass}
             aria-label={isEnglish ? 'Discover tab' : '디스커버 탭'}
           >
@@ -210,7 +213,7 @@ function ClientLayoutContent() {
             <span className="text-[9px] font-medium leading-none sm:text-[10px]">{isEnglish ? 'Discover' : '디스커버'}</span>
           </NavLink>
           <NavLink
-            to="/test-intro"
+            to={toLocalizedPath('/test-intro')}
             className={centerBottomNavLinkClass}
             aria-label={isEnglish ? 'Fit Finder tab' : '핏 파인더 탭'}
           >
@@ -220,7 +223,7 @@ function ClientLayoutContent() {
             <span className="text-[9px] font-bold leading-none sm:text-[10px]">{isEnglish ? 'Fit Finder' : '핏 파인더'}</span>
           </NavLink>
           <NavLink
-            to="/magazine"
+            to={toLocalizedPath('/magazine')}
             className={bottomNavLinkClass}
             aria-label={isEnglish ? 'Magazine tab' : '매거진 탭'}
           >
@@ -232,7 +235,7 @@ function ClientLayoutContent() {
             <span className="text-[9px] font-medium leading-none sm:text-[10px]">{isEnglish ? 'Magazine' : '매거진'}</span>
           </NavLink>
           <NavLink
-            to="/my"
+            to={toLocalizedPath('/my')}
             className={bottomNavLinkClass}
             aria-label={isEnglish ? 'My tab' : '마이 탭'}
           >

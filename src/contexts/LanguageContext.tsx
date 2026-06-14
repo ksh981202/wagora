@@ -1,6 +1,12 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  localizePath,
+  normalizeLanguage,
+  type Language,
+} from "@/shared/language/localizedRouting";
 
-export type Language = "ko" | "en";
+export type { Language };
 
 type LanguageContextValue = {
   language: Language;
@@ -11,22 +17,20 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem("gelia-language");
-    return savedLanguage === "en" ? "en" : "ko";
-  });
-
-  useEffect(() => {
-    localStorage.setItem("gelia-language", language);
-  }, [language]);
+  const { lang } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const language = normalizeLanguage(lang);
 
   const value = useMemo(
     () => ({
       language,
-      setLanguage,
+      setLanguage: (nextLanguage: Language) => {
+        navigate(`${localizePath(location.pathname, nextLanguage)}${location.search}${location.hash}`);
+      },
       isEnglish: language === "en",
     }),
-    [language],
+    [language, location.hash, location.pathname, location.search, navigate],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

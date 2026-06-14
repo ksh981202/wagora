@@ -324,7 +324,7 @@ function safeTrimText(value: unknown): string {
   return "";
 }
 
-function splitProcedureSteps(raw: string | null | undefined, language: "ko" | "en"): ProcedureSection[] {
+function splitProcedureSteps(raw: string | null | undefined, language: string): ProcedureSection[] {
   try {
     const s = raw != null && typeof raw === "string" ? raw : "";
     if (!s.trim()) return [];

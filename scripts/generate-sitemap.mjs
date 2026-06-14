@@ -15,6 +15,7 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
 const PAGE_SIZE = 1000
 const MAGAZINE_POST_TYPES = ['magazine', 'magazine_editor', 'magazine_brand', 'magazine_shopping']
+const SUPPORTED_LANGUAGES = ['ko', 'en', 'ja', 'zh']
 
 const staticRoutes = [
   '/',
@@ -109,6 +110,10 @@ function isMissingLookbookTable(error) {
   return error?.code === 'PGRST205'
 }
 
+function localizedLoc(route, language) {
+  return route === '/' ? `${SITE_URL}/${language}` : `${SITE_URL}/${language}${route}`
+}
+
 async function fetchAllNailDesigns() {
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: false },
@@ -175,31 +180,37 @@ async function fetchAllMagazinePosts() {
 
 function generateSitemapXml(nails, magazines) {
   const today = new Date().toISOString().slice(0, 10)
-  const staticEntries = staticRoutes.map((route) =>
-    buildUrlEntry({
-      loc: `${SITE_URL}${route === '/' ? '' : route}`,
-      lastmod: today,
-      changefreq: route === '/' || route === '/gallery' || route === '/ranking' ? 'daily' : 'weekly',
-      priority: route === '/' ? '1.0' : route === '/gallery' || route === '/ranking' ? '0.9' : '0.7',
-    }),
+  const staticEntries = SUPPORTED_LANGUAGES.flatMap((language) =>
+    staticRoutes.map((route) =>
+      buildUrlEntry({
+        loc: localizedLoc(route, language),
+        lastmod: today,
+        changefreq: route === '/' || route === '/gallery' || route === '/ranking' ? 'daily' : 'weekly',
+        priority: route === '/' ? '1.0' : route === '/gallery' || route === '/ranking' ? '0.9' : '0.7',
+      }),
+    ),
   )
 
-  const detailEntries = nails.map((nail) =>
-    buildUrlEntry({
-      loc: `${SITE_URL}/detail/${encodeURIComponent(nail.id)}`,
-      lastmod: normalizeLastmod(nail.created_at),
-      changefreq: 'monthly',
-      priority: '0.6',
-    }),
+  const detailEntries = SUPPORTED_LANGUAGES.flatMap((language) =>
+    nails.map((nail) =>
+      buildUrlEntry({
+        loc: `${SITE_URL}/${language}/detail/${encodeURIComponent(nail.id)}`,
+        lastmod: normalizeLastmod(nail.created_at),
+        changefreq: 'monthly',
+        priority: '0.6',
+      }),
+    ),
   )
 
-  const magazineEntries = magazines.map((post) =>
-    buildUrlEntry({
-      loc: `${SITE_URL}/magazine/${encodeURIComponent(post.id)}`,
-      lastmod: normalizeLastmod(post.created_at),
-      changefreq: 'monthly',
-      priority: '0.6',
-    }),
+  const magazineEntries = SUPPORTED_LANGUAGES.flatMap((language) =>
+    magazines.map((post) =>
+      buildUrlEntry({
+        loc: `${SITE_URL}/${language}/magazine/${encodeURIComponent(post.id)}`,
+        lastmod: normalizeLastmod(post.created_at),
+        changefreq: 'monthly',
+        priority: '0.6',
+      }),
+    ),
   )
 
   return [
@@ -221,7 +232,7 @@ async function main() {
 
   writeFileSync(outputPath, sitemap, 'utf8')
   console.log(
-    `Generated sitemap.xml with ${staticRoutes.length} static URLs, ${nails.length} detail URLs, and ${magazines.length} magazine URLs.`,
+    `Generated sitemap.xml with ${staticRoutes.length * SUPPORTED_LANGUAGES.length} static URLs, ${nails.length * SUPPORTED_LANGUAGES.length} detail URLs, and ${magazines.length * SUPPORTED_LANGUAGES.length} magazine URLs.`,
   )
 }
 

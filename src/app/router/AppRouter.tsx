@@ -5,8 +5,10 @@ import ClientLayout from '../../widgets/layout/ClientLayout'
 import {
   createBrowserRouter,
   Navigate,
+  useParams,
   RouterProvider,
 } from 'react-router-dom'
+import { isSupportedLanguage } from '@/shared/language/localizedRouting'
 
 const AdminUploadPage = lazy(() => import('../../pages/admin/AdminUploadPage'))
 const AdminBoard = lazy(() => import('../../pages/admin/AdminBoard'))
@@ -76,12 +78,18 @@ const TestStep1Page = lazy(() => import('../../pages/client/test/TestStep1Page')
 const TestStep2Page = lazy(() => import('../../pages/client/test/TestStep2Page'))
 const TestStep3Page = lazy(() => import('../../pages/client/test/TestStep3Page'))
 const TestResultPage = lazy(() => import('../../pages/client/test/TestResultPage'))
-const NotFoundPage = lazy(() => import('../../pages/client/NotFoundPage'))
+
+function LanguageRouteGuard() {
+  const { lang } = useParams()
+  if (!isSupportedLanguage(lang)) return <Navigate to="/ko" replace />
+  return <ClientLayout />
+}
 
 const router = createBrowserRouter([
+  { path: '/', element: <Navigate to="/ko" replace /> },
   {
-    path: '/',
-    element: <ClientLayout />,
+    path: '/:lang',
+    element: <LanguageRouteGuard />,
     children: [
       { index: true, element: <ClientHomePage /> },
       { path: 'category', element: <CategoryPage /> },
@@ -174,8 +182,8 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: '/client/*', element: <Navigate to="/" replace /> },
-  { path: '*', element: <NotFoundPage /> },
+  { path: '/client/*', element: <Navigate to="/ko" replace /> },
+  { path: '*', element: <Navigate to="/ko" replace /> },
 ])
 
 export function AppRouter() {
